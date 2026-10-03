@@ -1,19 +1,19 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { ArrowRight, Search, ShieldCheck } from "lucide-react";
+import { ArrowRight, CalendarDays, ChevronDown, Clapperboard, MapPin, Music2, Search, Ticket, Trophy, Drama } from "lucide-react";
 import { useEffect, useState } from "react";
 
 const navigation = [
-  { label: "Discover", href: "/" },
-  { label: "Live events", href: "/events" },
-  { label: "Fair queue", href: "/#how-it-works" },
-  { label: "How it works", href: "/#how-it-works" },
+  { label: "Movies", href: "/events?q=Movies", icon: Clapperboard },
+  { label: "Events", href: "/events?q=Live%20music", icon: CalendarDays },
+  { label: "Plays", href: "/events?q=Theatre", icon: Drama },
+  { label: "Sports", href: "/events?q=Sports", icon: Trophy },
+  { label: "Activities", href: "/events?q=Travel", icon: Ticket },
+  { label: "Concerts", href: "/events?q=Live%20music", icon: Music2 },
 ];
 
 export function SiteHeader() {
-  const pathname = usePathname();
   const [search, setSearch] = useState("");
   const [signedIn, setSignedIn] = useState(false);
 
@@ -41,28 +41,25 @@ export function SiteHeader() {
   }
 
   return (
-    <header className="sticky top-0 z-40 border-b border-[#e6eae6] bg-white/95 backdrop-blur">
-      <div className="mx-auto flex min-h-[70px] max-w-[1320px] items-center gap-8 px-5 lg:px-10">
-        <Link className="flex shrink-0 items-center gap-2.5 text-[20px] font-extrabold tracking-[-.7px]" href="/" aria-label="FairDrop home">
-          <span className="grid h-[31px] w-[31px] place-items-center rounded-[9px] bg-forest text-[17px] text-white">F</span>
+    <header className="sticky top-0 z-40 border-b border-[#e9ebef] bg-white/95 backdrop-blur">
+      <div className="mx-auto flex min-h-[54px] max-w-[1320px] items-center gap-5 px-4 sm:px-5">
+        <Link className="flex shrink-0 items-center gap-2 text-[20px] font-extrabold tracking-[-.7px]" href="/" aria-label="FairDrop home">
+          <Ticket className="text-[#ed174c]" size={26} strokeWidth={2.8} />
           FairDrop
         </Link>
-        <nav aria-label="Main navigation" className="hidden items-center gap-6 text-[13px] text-[#66716c] lg:flex">
-          {navigation.map((item) => {
-            const active = item.href === "/" ? pathname === "/" : pathname.startsWith(item.href.split("#")[0]) && item.href !== "/#how-it-works";
-            return <Link className={`nav-link ${active ? "nav-link-active" : ""}`} href={item.href} key={item.href}>{item.label}</Link>;
-          })}
-        </nav>
-        <form onSubmit={submitSearch} className="ml-auto hidden w-[225px] items-center gap-2 rounded-xl border border-[#e6eae6] bg-[#f8f9f7] px-3 py-2 text-[#6c7772] md:flex">
+        <form onSubmit={submitSearch} className="ml-2 hidden max-w-[520px] flex-1 items-center gap-2 rounded-full border border-[#e7e9ed] bg-[#f8f9fb] px-3 py-1.5 text-[#6c7772] sm:flex">
           <Search size={16} aria-hidden="true" />
-          <input className="w-full bg-transparent text-[13px] text-ink outline-none placeholder:text-[#858e89]" value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Find an experience" aria-label="Search experiences" />
+          <input className="w-full bg-transparent text-[12px] text-ink outline-none placeholder:text-[#858e89]" value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Search for Movies, Events, Plays, Sports and Activities" aria-label="Search experiences" />
         </form>
-        {signedIn ? <button className="hidden items-center gap-1 text-[13px] font-semibold text-ink sm:flex" onClick={signOut}>Sign out</button> : <Link className="hidden items-center gap-1 text-[13px] font-semibold text-ink sm:flex" href="/login">Sign in <ArrowRight size={15} aria-hidden="true" /></Link>}
-        <span className="hidden items-center gap-1.5 rounded-full bg-[#eef4f0] px-2.5 py-1.5 text-[10px] font-bold uppercase tracking-[.06em] text-forest xl:flex"><ShieldCheck size={13} aria-hidden="true" /> Fair access</span>
+        <div className="ml-auto hidden shrink-0 items-center gap-5 text-[12px] text-[#252c38] md:flex">
+          <span className="flex items-center gap-1.5 font-semibold"><MapPin size={14} /> Pune <ChevronDown size={12} /></span>
+          <Link href="/#how-it-works" className="hover:text-[#ed174c]">Offers</Link>
+          <Link href="/#discover" className="hover:text-[#ed174c]">Gift Cards</Link>
+        </div>
+        {signedIn ? <button className="shrink-0 text-[12px] font-semibold text-[#ed174c]" onClick={signOut}>Sign out</button> : <Link className="shrink-0 rounded-md bg-[#ed174c] px-3 py-1.5 text-[11px] font-bold text-white hover:bg-[#d51040]" href="/login">Sign in / Register <ArrowRight className="ml-1 inline" size={12} aria-hidden="true" /></Link>}
       </div>
-      <nav aria-label="Mobile navigation" className="flex gap-6 overflow-x-auto border-t border-[#f0f1ef] px-5 py-2.5 text-xs text-[#66716c] lg:hidden">
-        {navigation.map((item) => <Link className={pathname === item.href ? "font-semibold text-forest" : ""} href={item.href} key={item.href}>{item.label}</Link>)}
-        {signedIn ? <button className="font-semibold" onClick={signOut}>Sign out</button> : <Link className="font-semibold" href="/login">Sign in</Link>}
+      <nav aria-label="Browse categories" className="flex gap-6 overflow-x-auto border-t border-[#f0f1f3] px-4 text-[11px] text-[#343b47] sm:px-5">
+        {navigation.map(({ icon: Icon, ...item }) => <Link className="nav-link" href={item.href} key={item.label}><Icon className="mr-1.5 sm:hidden" size={14} />{item.label}</Link>)}
       </nav>
     </header>
   );
